@@ -1,2 +1,5 @@
-*/obj
-*/bin
+#compiled code
+*/bin/
+*/obj/
+#vscode stuff
+.vscode/

@@ -34,8 +34,8 @@ NOTE: Everything is little endian.
 
 
 A vmesh vertex attributes, are simply a list of numbers that define the vertex attributes.
-The attributes aren't explicitly given a purpose in the mesh file, in fact the actual use of the attributes aren't really defined until a shader renders the mesh.
-But, there are some patterns that all vmesh files will probably follow:
+The first few types (scalar, vec2, vec3, vec4) simply tell the number of floats. They exist in case an attribute does not fit into one of the other ones.
+The next types have a specific purpose (position(vec3),textureCoordinate(vec2), normal(vec3), RGB(vec3), RGBA(vec4))
 -The first attribue should always be the vertex's position, either 3D or 2D.
 -If the second attribute is 1D it's probably a brightness, 2D it's probably texture coordinates, 3D it's probably an RGB color, 4D it's probably an RGBA color.
 -if the third attribue is the same number of dimentions as the first, then it's probably a normal vector.

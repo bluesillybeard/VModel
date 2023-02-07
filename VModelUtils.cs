@@ -76,7 +76,7 @@ public class VModelUtils{
             for(int i=0; i<numAttributes; i++){
                 //for each attribute, read it in.
                 attributes[i] = (EAttribute)BitConverter.ToUInt32(file, index);
-                totalAttributes += (uint)attributes[i];
+                totalAttributes += ((uint)attributes[i] % 5);
                 index+=4;
             }
             //file size check

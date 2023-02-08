@@ -188,7 +188,7 @@ public class VModelUtils{
                 return null;
             }
             if(mesh == null){
-                throw new Exception("INVALID STATE: Mesh from LoadMesh shouldn't be null here under any circumstances!!");
+                throw new Exception("Mesh from LoadMesh shouldn't be null here under any circumstances!!");
             }
             ImageResult texture = ImageResult.FromMemory(File.ReadAllBytes(pathSep.Item1 + textureStr));
             //Finally, we place all the stuff into a model and return itt

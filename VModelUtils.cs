@@ -107,7 +107,7 @@ public class VModelUtils{
             }
             //Construct the mesh with the data
             error = null;
-            return new VMesh(vertices, indices, attributes, removableTris);
+            return new VMesh(vertices, indices, new Attributes(attributes), removableTris);
         }catch(Exception e){
             error = e;
             return null;

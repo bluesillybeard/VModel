@@ -5,10 +5,10 @@ public struct VMesh{
     //members:
     public float[] vertices;
     public uint[] indices;
-    public EAttribute[] attributes;
+    public Attributes attributes;
     public byte[]? removableTriangles;
 
-    public VMesh(float[] vertices, uint[] indices, EAttribute[] attributes, byte[]? removableTriangles){
+    public VMesh(float[] vertices, uint[] indices, Attributes attributes, byte[]? removableTriangles){
         this.vertices = vertices;
         this.indices = indices;
         this.attributes = attributes;

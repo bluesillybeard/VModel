@@ -39,7 +39,7 @@ public sealed class MeshBuilder{
         AddVertex(vert);
     }
 
-    public VMesh ToMesh(EAttribute[] attributes){
+    public VMesh ToMesh(Attributes attributes){
         List<float> vertices = new List<float>(_vertices.Count);
         for(int i=0; i<_vertices.Count; i++){
             vertices.AddRange(_vertices[i].vert);

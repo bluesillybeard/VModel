@@ -5,12 +5,10 @@ public struct VModel{
     public VMesh mesh;
     public ImageResult texture;
 
-    public byte? blockedFaces;
-    public byte? blockableFaces;
-    public VModel(VMesh mesh, ImageResult texture, byte? blockedFaces, byte? blockableFaces){
+    public byte? opaqueFaces;
+    public VModel(VMesh mesh, ImageResult texture, byte? opaqueFaces){
         this.mesh = mesh;
         this.texture = texture;
-        this.blockedFaces = blockedFaces;
-        this.blockableFaces = blockableFaces;
+        this.opaqueFaces = opaqueFaces;
     }
 }

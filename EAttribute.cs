@@ -31,6 +31,15 @@ public struct Attributes : IEnumerable<EAttribute>
             return attributes[index];
         }
     }
+    //Totals the number of floats that is required to store one vertex using a list of attributes
+    public uint TotalAttributes()
+    {
+        uint totalAttributes = 0;
+        for(int i=0; i<attributes.Length; i++){
+            totalAttributes += ((uint)attributes[i] % 5);
+        }
+        return totalAttributes;
+    }
 
     public int Length{get => attributes.Length;}
 

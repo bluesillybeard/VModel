@@ -6,12 +6,12 @@ public struct VMesh{
     public float[] vertices;
     public uint[] indices;
     public Attributes attributes;
-    public byte[]? removableTriangles;
+    public byte[]? triangleToFaces;
 
-    public VMesh(float[] vertices, uint[] indices, Attributes attributes, byte[]? removableTriangles){
+    public VMesh(float[] vertices, uint[] indices, Attributes attributes, byte[]? triangleToFaces){
         this.vertices = vertices;
         this.indices = indices;
         this.attributes = attributes;
-        this.removableTriangles = removableTriangles;
+        this.triangleToFaces = triangleToFaces;
     }
 }

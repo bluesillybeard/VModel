@@ -16,7 +16,7 @@ public enum EAttribute{
     rgbColor = 18,
 }
 
-public struct Attributes : IEnumerable<EAttribute>
+public struct Attributes : IEnumerable, IEnumerable<EAttribute>
 {
     private EAttribute[] attributes;
     public Attributes(EAttribute[] attributes)
@@ -56,6 +56,6 @@ public struct Attributes : IEnumerable<EAttribute>
 
     IEnumerator<EAttribute> IEnumerable<EAttribute>.GetEnumerator()
     {
-        return (IEnumerator<EAttribute>)attributes.GetEnumerator();
+        return attributes.AsEnumerable<EAttribute>().GetEnumerator();
     }
 }

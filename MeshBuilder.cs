@@ -20,6 +20,12 @@ public sealed class MeshBuilder{
         _indices = new List<uint>(indexCapacity);
     }
 
+    public void Clear()
+    {
+        _vertexLookup.Clear();
+        _indices.Clear();
+        _vertices.Clear();
+    }
     public void AddVertex(params float[] vert){
         int hash = Vertex.GenerateHash(vert);
 

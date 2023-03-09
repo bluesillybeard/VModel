@@ -44,7 +44,6 @@ public sealed class MeshBuilder{
         vert = ConvertVertex(vert, mapping);
         AddVertex(vert);
     }
-
     public VMesh ToMesh(Attributes attributes){
         List<float> vertices = new List<float>(_vertices.Count);
         for(int i=0; i<_vertices.Count; i++){
@@ -52,7 +51,6 @@ public sealed class MeshBuilder{
         }
         return new VMesh(vertices.ToArray(), _indices.ToArray(), attributes, null);
     }
-
     public static float[] ConvertVertex(float[] vertex, params int[] mapping){
         float[] ret = new float[mapping.Length];
         for(int i=0; i<mapping.Length; i++){

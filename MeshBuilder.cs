@@ -3,6 +3,10 @@ namespace vmodel;
 using System;
 using System.Collections.Generic;
 
+//TODO (Fairly important as it is making this incredibly annoting to debug)
+// Make it to where a builder can onlt create a mesh with attributes,
+// In other words enforce a certain Attributes from the very beginning.
+
 public sealed class MeshBuilder{
     private readonly Dictionary<int /*hash*/, Vertex> _vertexLookup;
     private readonly List<Vertex> _vertices;
@@ -49,7 +53,21 @@ public sealed class MeshBuilder{
         for(int i=0; i<_vertices.Count; i++){
             vertices.AddRange(_vertices[i].vert);
         }
+        #if DEBUG
+        if(_indices.Count % 3 != 0)throw new Exception("Bro these vertices arent triangular");
+        #endif
         return new VMesh(vertices.ToArray(), _indices.ToArray(), attributes, null);
+    }
+
+    public int indicesCount()
+    {
+        return _indices.Count;
+    }
+
+    [System.Diagnostics.Conditional("DEBUG")]
+    public void checkIndicesOrDie()
+    {
+        if(_indices.Count % 3 != 0) throw new Exception("The indices are not triangular!");
     }
     public static float[] ConvertVertex(float[] vertex, params int[] mapping){
         float[] ret = new float[mapping.Length];

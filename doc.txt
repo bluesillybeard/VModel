@@ -63,10 +63,9 @@ It is worth noting that if every face is blocked, the entire block will be culle
 The faces are organized like so:
 bit 1 :top (+y)
 bit 2 :bottom(-y)
-bit 4 :side (-z OR +z; -z if the formula ((x + z) & 1) - 0.5f evaluates to -1)
-The formula "(z + x & 1) * -2 + 1 + z" can be used to get the Z position of the block that touches the z side of a block.
-bit 8 :side (-x)
-bit 16:side (+x)
+bit 4 :side 1 (+x)
+bit 8 :side 2 (+x rotated 60 degrees towards +z)
+bit 16: side 3 (+x rotated 60 degrees towards -z)
 bits 32, 64, and 128 are unused and ignored. Theoretically, they could be used to hide a secret message...
 
 The blocked faces of a block model (the faces that the block will block from being seen on other blocks) are stored within the VMF file, not the vbmesh.

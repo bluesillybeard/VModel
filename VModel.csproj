@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="stbimagesharp" Version="2.27.13" /><!--to open images-->
+    <PackageReference Include="stbimagesharp" Version="2.27.13" />
+    <PackageReference Include="StbImageWriteSharp" Version="1.16.7" />
   </ItemGroup>
 </Project>

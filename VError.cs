@@ -6,9 +6,9 @@ public enum VErrorType{
     Exception, vmfSyntax, unknown
 }
 public struct VError{
-    Exception? exception;
-    string message;
-    VErrorType type;
+    public readonly Exception? exception;
+    public readonly string message;
+    public readonly VErrorType type;
 
     public VError(string parseError){
         type = VErrorType.vmfSyntax;
@@ -20,6 +20,13 @@ public struct VError{
         this.type = VErrorType.Exception;
         message = exception.Message;
         this.exception = exception;
+    }
+
+    public VError(Exception? ex, string me, VErrorType t)
+    {
+        this.exception = ex;
+        this.message = me;
+        this.type = t;
     }
 
     public override string ToString()

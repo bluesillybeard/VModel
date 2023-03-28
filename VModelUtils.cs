@@ -107,18 +107,18 @@ public class VModelUtils{
                 indices[i] = BitConverter.ToUInt32(file, index);
                 index+=4;
             }
-            //removable triangles, if they exist:
-            byte[]? removableTris = null;
-            if(12/*header*/ + totalAttributes*numVerts*4 + numInds*4 + numAttributes*4 > file.Length){
-                removableTris = new byte[numTris];
+            //triangle-face mappings, if they exist
+            byte[]? mapping = null;
+            if(12/*header*/ + totalAttributes*numVerts*4 + numInds*4 + numAttributes*4 < file.Length){
+                mapping = new byte[numTris];
                 for(int i=0; i<numTris; i++){
-                    removableTris[i] = file[index];
+                    mapping[i] = file[index];
                     index++;
                 }
             }
             //Construct the mesh with the data
             error = null;
-            return new VMesh(vertices, indices, new Attributes(attributes), removableTris);
+            return new VMesh(vertices, indices, new Attributes(attributes), mapping);
         }catch(Exception e){
             error = e;
             return null;
@@ -173,7 +173,7 @@ public class VModelUtils{
             if(typeStr.Equals("block") && opaque is null){
                 if(!byte.TryParse(opaqueStr, out var opaques)){
                     if(errors == null) errors = new List<VError>(4);
-                    errors.Add(new VError("unable to parse blocks parameter in \"" + path + "\", assuming 0"));
+                    errors.Add(new VError("unable to parse opaque parameter in \"" + path + "\", assuming 0"));
                     opaques = 0;
                 }
                 opaque = opaques;

@@ -1,6 +1,8 @@
 namespace vmodel;
 
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
+
 public enum EAttribute{
     //generic/unreasoned types
     scalar=1,
@@ -57,5 +59,35 @@ public struct Attributes : IEnumerable, IEnumerable<EAttribute>
     IEnumerator<EAttribute> IEnumerable<EAttribute>.GetEnumerator()
     {
         return attributes.AsEnumerable<EAttribute>().GetEnumerator();
+    }
+
+    public override int GetHashCode()
+    {
+        //TODO: acctual hash code function
+        return base.GetHashCode();
+    }
+
+    public override bool Equals([NotNullWhen(true)] object? obj)
+    {
+        if(obj is Attributes other)
+        {
+            return other == this;
+        }
+        if(obj is Attributes?)
+        {
+            var other0 = (Attributes?)obj;
+            return other0.Value == this;
+        }
+        return false;
+    }
+
+    public static bool operator == (Attributes a, Attributes b)
+    {
+        return a.attributes.SequenceEqual(b.attributes);
+    }
+
+    public static bool operator != (Attributes a, Attributes b)
+    {
+        return !a.attributes.SequenceEqual(b.attributes);
     }
 }

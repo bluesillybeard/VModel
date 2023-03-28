@@ -229,8 +229,8 @@ public class VModelUtils{
                 things["type"] = "block";
                 things["opaque"] = m.opaqueFaces.Value.ToString();
             }
-            things["mesh"] = Path.GetRelativePath(vmfPath, meshPath);
-            things["texture"] = Path.GetRelativePath(vmfPath, imagePath);
+            things["mesh"] = Path.GetRelativePath(basePath, totalMeshPath);
+            things["texture"] = Path.GetRelativePath(basePath, totalImagePath);
             File.WriteAllText(basePath + vmfPath, CreateListMap(things));
             return meshErrors;
         } catch(Exception e)

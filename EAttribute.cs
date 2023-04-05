@@ -2,7 +2,6 @@ namespace vmodel;
 
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-
 public enum EAttribute{
     //generic/unreasoned types
     scalar=1,

@@ -46,6 +46,15 @@ public sealed class MeshBuilder
         AddVertexInternal(vertex);
     }
 
+        public void AddVertex(ReadOnlySpan<float> vertex)
+    {
+        if(vertex.Length != totalAttributes)
+        {
+            throw new Exception("Wrong attributes for vertex");
+        }
+        AddVertexInternal(vertex);
+    }
+
     private void AddVertexInternal(ReadOnlySpan<float> vertex)
     {
         //If this vertex already exists, we just add it to our indices
@@ -92,6 +101,17 @@ public sealed class MeshBuilder
         return false;
     }
     public void AddVertex(int[] mapping, params float[] vertex)
+    {
+        if(mapping.Length != totalAttributes)
+        {
+            throw new Exception("Mapping would not create correct attributes");
+        }
+        Span<float> converted = stackalloc float[mapping.Length];
+        ConvertVertex(vertex, converted, mapping);
+        AddVertexInternal(converted);
+    }
+
+    public void AddVertex(int[] mapping, ReadOnlySpan<float> vertex)
     {
         if(mapping.Length != totalAttributes)
         {

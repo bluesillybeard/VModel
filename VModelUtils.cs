@@ -7,7 +7,7 @@ using System.Text;
 
 using StbImageSharp;
 using StbImageWriteSharp;
-public class VModelUtils{
+public static class VModelUtils{
     public static Dictionary<string, string> ParseListMap(string listContents, out List<VError>? errors){
         //TODO: write a better version that handles escape characters properly.
         //TODO: use something 'proper' like a YAML loader or something.
@@ -15,12 +15,12 @@ public class VModelUtils{
 
         //first, we split each non-empty line into it's own string.
         string[] lines = listContents.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-        Dictionary<string, string> dict = new Dictionary<string, string>();
+        Dictionary<string, string> dict = new();
         foreach (string line in lines){
             //for each line, split it into the key and value
             string[] keyValue = line.Split(":", 2, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
             if(keyValue.Length != 2){
-                if(errors == null)errors = new List<VError>(4);
+                errors ??= new List<VError>(4);
                 errors.Add(new VError($"Can't have empty value: \"{line}\". Are you missing a colon or forgot to define it?"));
             } else {
                 string value = keyValue[1];
@@ -33,10 +33,10 @@ public class VModelUtils{
     }
     public static string CreateListMap(Dictionary<string, string> contents)
     {
-        StringBuilder b = new StringBuilder();
+        StringBuilder b = new();
         foreach(KeyValuePair<string, string> item in contents)
         {
-            b.Append(item.Key + ": " + item.Value + "\n");
+            b.Append(item.Key).Append(": ").Append(item.Value).Append('\n');
         }
         return b.ToString();
     }
@@ -44,7 +44,7 @@ public class VModelUtils{
         int lastSlash = path.LastIndexOf('/');
         if(lastSlash == -1)return new Tuple<string, string>("", path);
         //we want to include the last slash in the folder, and exclude it in the path
-        return new Tuple<string, string>(path.Substring(0, lastSlash+1), path.Substring(lastSlash+1));
+        return new Tuple<string, string>(path[..(lastSlash + 1)], path[(lastSlash + 1)..]);
     }
 
     public static VMesh? LoadMesh(string path, out Exception? error){
@@ -91,7 +91,7 @@ public class VModelUtils{
                 index+=4;
             }
             //file size check
-            if(12/*header*/ + totalAttributes*numVerts*4 + numInds*4 + numAttributes*4 > file.Length){
+            if(12/*header*/ + (totalAttributes *numVerts*4) + (numInds * 4) + (numAttributes * 4) > file.Length){
                 error = new InvalidDataException("Invalid vmesh file: file too small");
                 return null;
             }
@@ -109,7 +109,7 @@ public class VModelUtils{
             }
             //triangle-face mappings, if they exist
             byte[]? mapping = null;
-            if(12/*header*/ + totalAttributes*numVerts*4 + numInds*4 + numAttributes*4 < file.Length){
+            if(12/*header*/ + (totalAttributes *numVerts*4) + (numInds * 4) + (numAttributes * 4) < file.Length){
                 mapping = new byte[numTris];
                 for(int i=0; i<numTris; i++){
                     mapping[i] = file[index];
@@ -132,7 +132,7 @@ public class VModelUtils{
             file = File.ReadAllText(path);
             return ParseLoadModel(file, out errors, path);
         }catch(Exception e){
-            if(errors == null)errors = new List<VError>(4);
+            errors ??= new List<VError>(4);
             errors.Add(new VError(e));
             return null;
         }
@@ -144,35 +144,32 @@ public class VModelUtils{
             //parse the VMF file to get the elements
             Dictionary<string, string> vmf = ParseListMap(file, out errors);
             //Get the important values
-            string? typeStr = null;
-            string? meshStr = null;
-            string? textureStr = null;
             string? opaqueStr = null;
-            if(!vmf.TryGetValue("type", out typeStr)){
-                if(errors == null) errors = new List<VError>(4);
+            if (!vmf.TryGetValue("type", out string? typeStr)){
+                errors ??= new List<VError>(4);
                 errors.Add(new VError("type parameter not specified in \"" + path + "\""));
                 return null;
             }
-            if(!vmf.TryGetValue("mesh", out meshStr)){
-                if(errors == null) errors = new List<VError>(4);
+            if(!vmf.TryGetValue("mesh", out string? meshStr)){
+                errors ??= new List<VError>(4);
                 errors.Add(new VError("mesh parameter not specified in \"" + path + "\""));
                 return null;
             }
             byte? opaque = null;
             if(typeStr.Equals("block") && !vmf.TryGetValue("opaque", out opaqueStr)){
-                if(errors == null) errors = new List<VError>(4);
+                errors ??= new List<VError>(4);
                 errors.Add(new VError("opaque parameter not specified in \"" + path + "\", assuming 0"));
                 opaque = 0;
             }
-            if(!vmf.TryGetValue("texture", out textureStr)){
-                if(errors == null) errors = new List<VError>(4);
+            if(!vmf.TryGetValue("texture", out string? textureStr)){
+                errors ??= new List<VError>(4);
                 errors.Add(new VError("texture parameter not specified in \"" + path + "\""));
                 return null;
             }
             //Now we get the actual data
             if(typeStr.Equals("block") && opaque is null){
                 if(!byte.TryParse(opaqueStr, out var opaques)){
-                    if(errors == null) errors = new List<VError>(4);
+                    errors ??= new List<VError>(4);
                     errors.Add(new VError("unable to parse opaque parameter in \"" + path + "\", assuming 0"));
                     opaques = 0;
                 }
@@ -181,7 +178,7 @@ public class VModelUtils{
             var pathSep = SplitFolderAndFile(path);
             VMesh? mesh = LoadMesh(File.ReadAllBytes(pathSep.Item1 + meshStr), out var exception);
             if(exception != null){
-                if(errors==null)errors = new List<VError>(4);
+                errors ??= new List<VError>(4);
                 errors.Add(new VError(exception));
                 return null;
             }
@@ -192,7 +189,7 @@ public class VModelUtils{
             //Finally, we place all the stuff into a model and return itt
             return new VModel(mesh.Value, texture, opaque);
         }catch(Exception e){
-            if(errors == null)errors = new List<VError>(4);
+            errors ??= new List<VError>(4);
             errors.Add(new VError(e));
             return null;
         }
@@ -204,27 +201,28 @@ public class VModelUtils{
         try{
             //Save the mesh
             var totalMeshPath = basePath + meshPath;
-            try{
+            if(File.Exists(totalMeshPath))
                 File.Delete(totalMeshPath);
-            } catch(Exception){}
-            FileStream stream = new FileStream(totalMeshPath, FileMode.CreateNew);
+
+            FileStream stream = new(totalMeshPath, FileMode.CreateNew);
             var meshErrors = SerializeMesh(m.mesh, stream);
             stream.Flush();
             stream.Dispose();
             //Save the image
             var totalImagePath = basePath + imagePath;
-            try{
+            if(File.Exists(totalImagePath))
                 File.Delete(totalImagePath);
-            } catch(Exception){}
-            stream = new FileStream(totalImagePath, FileMode.CreateNew);
-            ImageWriter w = new ImageWriter();
+            stream = new(totalImagePath, FileMode.CreateNew);
+            ImageWriter w = new();
             w.WritePng(m.texture.Data, m.texture.Width, m.texture.Height, (StbImageWriteSharp.ColorComponents)m.texture.Comp, stream);
             stream.Flush();
             stream.Dispose();
             //save the actual vmf file.
-            Dictionary<string, string> things = new Dictionary<string, string>();
-            things["type"] = "entity";
-            if(m.opaqueFaces is not null)
+            Dictionary<string, string> things = new()
+            {
+                ["type"] = "entity"
+            };
+            if (m.opaqueFaces is not null)
             {
                 things["type"] = "block";
                 things["opaque"] = m.opaqueFaces.Value.ToString();
@@ -235,32 +233,21 @@ public class VModelUtils{
             return meshErrors;
         } catch(Exception e)
         {
-            var er = new List<VError>();
-            er.Add(new VError(e));
+            var er = new List<VError>
+            {
+                new VError(e)
+            };
             return er;
         }
     }
     public static List<VError>? SerializeMesh(VMesh mesh, Stream stream)
     {
         List<VError>? errors = null;
-        //Figure out how much space we are actually going to need.
-        uint length;
-        {
-            const uint staticBytes = 12; //the minimum bytes if a vmesh file - the first 12 bytes are always required.
-            uint attributeBytes = (uint)mesh.attributes.Length * 4;
-            uint verticesBytes  = (uint)mesh.vertices  .Length * 4;
-            uint indicesBytes   = (uint)mesh.indices   .Length * 4;
-            length = staticBytes + attributeBytes + verticesBytes + indicesBytes;
-            if(mesh.triangleToFaces is not null)
-            {
-                length += (uint)mesh.triangleToFaces.Length;
-            }
-        }
         uint totalAttributes = mesh.attributes.TotalAttributes();
         if(!stream.CanWrite)
         {
-            if(errors is null)errors = new List<VError>();
-            VError v = new VError(null, "Unwritable stream", VErrorType.unknown);
+            errors ??= new List<VError>();
+            VError v = new(null, "Unwritable stream", VErrorType.unknown);
             errors.Add(v);
         }
         //Now we need to actually write the data.

@@ -17,9 +17,9 @@ public enum EAttribute{
     rgbColor = 18,
 }
 
-public struct Attributes : IEnumerable, IEnumerable<EAttribute>
+public readonly struct Attributes : IEnumerable, IEnumerable<EAttribute>
 {
-    private EAttribute[] attributes;
+    private readonly EAttribute[] attributes;
     public Attributes(EAttribute[] attributes)
     {
         this.attributes = attributes;

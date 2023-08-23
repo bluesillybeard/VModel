@@ -5,7 +5,7 @@ namespace vmodel;
 public enum VErrorType{
     Exception, vmfSyntax, unknown
 }
-public struct VError{
+public readonly struct VError{
     public readonly Exception? exception;
     public readonly string message;
     public readonly VErrorType type;

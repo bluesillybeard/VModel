@@ -135,7 +135,7 @@ public sealed class MeshBuilder
     }
 
     private static int GenerateHash(ReadOnlySpan<float> vertex){
-        HashCode hasher = new HashCode();
+        HashCode hasher = new();
         foreach(float f in vertex){
            hasher.Add(BitConverter.SingleToInt32Bits(f));
         }

@@ -89,4 +89,9 @@ public readonly struct Attributes : IEnumerable, IEnumerable<EAttribute>
     {
         return !a.attributes.SequenceEqual(b.attributes);
     }
+
+    public override string ToString()
+    {
+        return string.Join(", ", attributes);
+    }
 }
